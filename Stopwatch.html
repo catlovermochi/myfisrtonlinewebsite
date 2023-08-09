@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Stopwatch</title>
+
+    <style>
+      body{
+        font-family:Arial;
+        background-color:black;
+        color:rgb(221, 184, 244);
+      }
+      .start-button,
+      .resume-button{
+        margin-top:20px;
+        color:white;
+        background-color:rgb(221, 184, 244);
+        border:none;
+        padding: 10px 25px;
+        font-size:15px;
+        border-radius:25px;
+        cursor:pointer;
+      }
+
+      .stop-button{
+        color:white;
+        background-color:rgb(255, 106, 0);
+        border:none;
+        padding: 10px 25px;
+        font-size:15px;
+        border-radius:25px;
+        cursor:pointer;
+      }
+      .reset-button{
+        color:white;
+        background-color:rgba(81, 79, 82, 0.839);
+        border:none;
+        padding: 10px 25px;
+        font-size:15px;
+        border-radius:25px;
+        cursor:pointer;
+        margin-left:50px;
+      }
+
+      .show-screen{
+        margin-top:200px;
+        font-size:50px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <center>
+    <p class="js-show-screen show-screen"></p>
+    <button class="js-start-button start-button">Start</button>
+    <button class="js-reset-button reset-button">Reset</button>
+    </center>
+    <script>
+      let time={
+        hour:0,
+        minute:0,
+        second:0
+      };
+
+      let intervalId;
+      let isRunning=false;
+      displaying();
+      
+      function starting()
+      {
+        if(!isRunning){
+          document.querySelector('.js-start-button').innerHTML='Stop';
+          document.querySelector('.js-start-button').classList.add('stop-button');
+          isRunning=true;
+          intervalId=setInterval(()=>{
+            if(time.second===59)
+            {
+              time.second=-1;
+              time.minute++;
+            }
+            if(time.minute===59)
+            {
+              time.minute=-1;
+              time.hour++;
+            }
+            time.second++;
+            displaying();
+            console.log(time);
+          },1000);
+        }
+        else{
+          clearInterval(intervalId);
+          document.querySelector('.js-start-button').innerHTML='Resume';
+          document.querySelector('.js-start-button').classList.remove('stop-button');
+          document.querySelector('.js-start-button').classList.add('resume-button');
+          isRunning=false;
+        }
+      }
+
+      function resetting()
+      {
+        isRunning=false;
+        clearInterval(intervalId);
+        time={
+        hour:0,
+        minute:0,
+        second:0
+        };
+        document.querySelector('.js-start-button').innerHTML='Start';
+        document.querySelector('.js-start-button').classList.remove('stop-button');
+        displaying();
+      }
+
+      function displaying()
+      {
+        let second=`0${time.second}`;
+        let minute=`0${time.minute}`;
+        let hour=`0${time.hour}`;
+        
+        if(time.second>=10){
+          second=`${time.second}`;
+        }
+        if(time.minute>=10){
+          minute=`${time.minute}`;
+        }
+        if(time.hour>=10){
+          hour=`${time.hour}`;
+        }
+        let html=hour+':'+minute+':'+second;
+        document.querySelector('.js-show-screen').innerHTML=html;
+      }
+
+
+      document.querySelector('.js-start-button').addEventListener('click',()=>{
+        starting();
+      });
+
+      document.querySelector('.js-reset-button').addEventListener('click',()=>{
+        resetting();
+      });
+
+    </script>
+  </body>
+</html>
